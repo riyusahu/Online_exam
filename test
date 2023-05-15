@@ -1,0 +1,78 @@
+import java.util.Scanner;
+
+public class MCQTest {
+    
+    // Example user profile
+    private static String username = "example_user";
+    private static String password = "password123";
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        
+        // Login
+        boolean loggedIn = false;
+        while (!loggedIn) {
+            System.out.print("Enter username: ");
+            input = scanner.nextLine();
+            System.out.print("Enter password: ");
+            String passwordInput = scanner.nextLine();
+            if (input.equals(username) && passwordInput.equals(password)) {
+                System.out.println("Logged in successfully!");
+                loggedIn = true;
+            } else {
+                System.out.println("Incorrect username or password. Please try again.");
+            }
+        }
+        
+        // Update profile and password
+        System.out.print("Would you like to update your profile or password? (p for profile, pass for password): ");
+        input = scanner.nextLine();
+        if (input.equals("p")) {
+            System.out.print("Enter new username: ");
+            String newUsername = scanner.nextLine();
+            username = newUsername;
+            System.out.println("Profile updated!");
+        } else if (input.equals("pass")) {
+            System.out.print("Enter new password: ");
+            String newPassword = scanner.nextLine();
+            password = newPassword;
+            System.out.println("Password updated!");
+        } else {
+            System.out.println("Invalid input. Profile and password not updated.");
+        }
+        
+        // Selecting answers for MCQs
+        System.out.println("Select answers for MCQs:");
+        System.out.println("Question 1: What is 2 + 2?");
+        System.out.println("A. 1");
+        System.out.println("B. 2");
+        System.out.println("C. 3");
+        System.out.println("D. 4");
+        System.out.print("Answer: ");
+        String answer1 = scanner.nextLine();
+        
+        // Timer and auto submit
+        System.out.println("You have 30 seconds to answer the next question.");
+        long startTime = System.currentTimeMillis();
+        System.out.println("Question 2: What is the capital of France?");
+        System.out.println("A. Madrid");
+        System.out.println("B. Paris");
+        System.out.println("C. Berlin");
+        System.out.println("D. Rome");
+        System.out.print("Answer: ");
+        String answer2 = scanner.nextLine();
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        if (elapsedTime >= 30000) {
+            System.out.println("Time's up! Your answer has been automatically submitted.");
+        } else {
+            System.out.println("Your answer has been submitted.");
+        }
+        
+        // Closing session and logout
+        System.out.println("Closing session...");
+        loggedIn = false;
+        System.out.println("Logged out successfully!");
+    }
+}
