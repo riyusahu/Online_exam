@@ -1,78 +1,135 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class MCQTest {
-    
-    // Example user profile
-    private static String username = "example_user";
-    private static String password = "password123";
-    
+class Main {
+
+    private static ArrayList<String> usernames = new ArrayList<>(); // Dynamic user storage
+    private static ArrayList<String> passwords = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String input;
-        
-        // Login
-        boolean loggedIn = false;
-        while (!loggedIn) {
-            System.out.print("Enter username: ");
-            input = scanner.nextLine();
-            System.out.print("Enter password: ");
-            String passwordInput = scanner.nextLine();
-            if (input.equals(username) && passwordInput.equals(password)) {
-                System.out.println("Logged in successfully!");
-                loggedIn = true;
+        System.out.println("Welcome to the Online MCQ Exam System!");
+
+        while (true) {
+            System.out.println("\n1. Register\n2. Login\n3. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            if (choice == 1) {
+                register();
+            } else if (choice == 2) {
+                if (login()) {
+                    startExam();
+                }
+            } else if (choice == 3) {
+                System.out.println("Thank you for using the system. Goodbye!");
+                break;
             } else {
-                System.out.println("Incorrect username or password. Please try again.");
+                System.out.println("Invalid choice. Please try again.");
             }
         }
-        
-        // Update profile and password
-        System.out.print("Would you like to update your profile or password? (p for profile, pass for password): ");
-        input = scanner.nextLine();
-        if (input.equals("p")) {
-            System.out.print("Enter new username: ");
-            String newUsername = scanner.nextLine();
-            username = newUsername;
-            System.out.println("Profile updated!");
-        } else if (input.equals("pass")) {
-            System.out.print("Enter new password: ");
-            String newPassword = scanner.nextLine();
-            password = newPassword;
-            System.out.println("Password updated!");
-        } else {
-            System.out.println("Invalid input. Profile and password not updated.");
+    }
+
+    private static void register() {
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        // Check if username is already taken
+        if (usernames.contains(username)) {
+            System.out.println("Username already exists. Please choose a different username.");
+            return;
         }
-        
-        // Selecting answers for MCQs
-        System.out.println("Select answers for MCQs:");
-        System.out.println("Question 1: What is 2 + 2?");
-        System.out.println("A. 1");
-        System.out.println("B. 2");
-        System.out.println("C. 3");
-        System.out.println("D. 4");
-        System.out.print("Answer: ");
-        String answer1 = scanner.nextLine();
-        
-        // Timer and auto submit
-        System.out.println("You have 30 seconds to answer the next question.");
-        long startTime = System.currentTimeMillis();
-        System.out.println("Question 2: What is the capital of France?");
-        System.out.println("A. Madrid");
-        System.out.println("B. Paris");
-        System.out.println("C. Berlin");
-        System.out.println("D. Rome");
-        System.out.print("Answer: ");
-        String answer2 = scanner.nextLine();
-        long endTime = System.currentTimeMillis();
-        long elapsedTime = endTime - startTime;
-        if (elapsedTime >= 30000) {
-            System.out.println("Time's up! Your answer has been automatically submitted.");
-        } else {
-            System.out.println("Your answer has been submitted.");
+
+        usernames.add(username);
+        passwords.add(password);
+
+        System.out.println("Registration successful!");
+    }
+
+    private static boolean login() {
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        for (int i = 0; i < usernames.size(); i++) {
+            if (usernames.get(i).equals(username) && passwords.get(i).equals(password)) {
+                System.out.println("Login successful!");
+                return true;
+            }
         }
-        
-        // Closing session and logout
-        System.out.println("Closing session...");
-        loggedIn = false;
-        System.out.println("Logged out successfully!");
+
+        System.out.println("Invalid username or password.");
+        return false;
+    }
+
+    private static void startExam() {
+        System.out.println("\nChoose a difficulty level:");
+        System.out.println("1. Easy\n2. Medium\n3. Hard");
+        System.out.print("Enter choice: ");
+        int difficulty = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        // Question Bank
+        String[][] easyQuestions = {
+            {"What is 2 + 2?", "A. 3", "B. 4", "C. 5", "D. 6", "B"},
+            {"What is 3 + 5?", "A. 7", "B. 8", "C. 9", "D. 10", "B"}
+        };
+
+        String[][] mediumQuestions = {
+            {"What is the square of 3?", "A. 6", "B. 9", "C. 12", "D. 15", "B"},
+            {"What is the capital of France?", "A. Madrid", "B. Paris", "C. Berlin", "D. Rome", "B"}
+        };
+
+        String[][] hardQuestions = {
+            {"Solve: 15 / 3 + 4", "A. 8", "B. 9", "C. 10", "D. 11", "B"},
+            {"What is 7 x 6?", "A. 42", "B. 48", "C. 56", "D. 63", "A"}
+        };
+
+        String[][] selectedQuestions;
+        if (difficulty == 1) {
+            selectedQuestions = easyQuestions;
+        } else if (difficulty == 2) {
+            selectedQuestions = mediumQuestions;
+        } else {
+            selectedQuestions = hardQuestions;
+        }
+
+        int score = 0;
+        for (String[] question : selectedQuestions) {
+            System.out.println("\n" + question[0]);
+            System.out.println(question[1]);
+            System.out.println(question[2]);
+            System.out.println(question[3]);
+            System.out.println(question[4]);
+
+            long startTime = System.currentTimeMillis();
+            System.out.print("Answer (You have 10 seconds): ");
+            String userAnswer = scanner.nextLine();
+            long elapsedTime = System.currentTimeMillis() - startTime;
+
+            if (elapsedTime > 10000) {
+                System.out.println("Time's up! No answer recorded for this question.");
+            } else if (userAnswer.equalsIgnoreCase(question[5])) {
+                System.out.println("Correct!");
+                score++;
+            } else {
+                System.out.println("Wrong answer.");
+            }
+        }
+
+        System.out.println("\nExam completed. Your score: " + score + "/" + selectedQuestions.length);
+
+        if (score == selectedQuestions.length) {
+            System.out.println("Congratulations! You scored full marks and earned a badge!");
+        } else if (score > selectedQuestions.length / 2) {
+            System.out.println("Well done! You passed the exam.");
+        } else {
+            System.out.println("Better luck next time.");
+        }
     }
 }
+
